@@ -29,7 +29,7 @@ def setScalingFreq(min_scaling_freq, max_scaling_freq, no_of_cores):
 				print ("CPU Freq " + str(i) + " set to " + out1 + ", " + out2)
 			  	break
 		else:
-			print ("Failed, have to log")
+			logging.warning("CPU " + str(i)+ " Frequency change failed")
 			# we failed all the attempts - deal with the consequences.
 		
 		
@@ -55,9 +55,48 @@ def setGovernor(governor, no_of_cores):
 				print ("CPU " + str(i) + "Governor set to " + out1)
 			  	break
 		else:
-			print ("Failed, have to log")
+			logging.warning("CPU " + str(i)+ " Governor change failed")
 			# we failed all the attempts - deal with the consequences.
 		
+
+def setIOScheduler(algo):
+
+	
+	for attempt in range(5):
+		try:
+			scheduler_path =  "/sys/block/sda/queue/scheduler"		
+			
+			subprocess.call("echo "+ algo +" > " + scheduler_path, shell=True)
+			
+			
+			out1 = (subprocess.check_output("cat " + scheduler_path,shell=True).rstrip('\n'))
+			current_algo=""
+			flag = False
+			for c in out1:
+				if c=="]":
+					flag=False
+
+				if flag:
+					current_algo+=c
+				
+				if c=="[":
+					flag = True
+
+
+					
+			logging.info(current_algo)
+			if current_algo!=algo:
+				continue
+				
+			
+		except:
+		  	continue
+		else:
+			print ("IO Scheduler Algo set to " + current_algo)
+		  	break
+	else:
+		logging.warning("IO Scheduler Algo change failed")
+		# we failed all the attempts - deal with the consequences.
 
 		
 
@@ -83,6 +122,8 @@ if __name__ == "__main__":
 	parser.add_argument('cpu_freq_governor', action='store', 
 	                                 help=(''))
 
+	parser.add_argument('io_scheduler_algo', action='store', 
+	                                 help=('IO Scheduler Algorithm'))
 	#parser.add_argument('', action='store', 
 	#                                help=(''))
 
@@ -90,11 +131,13 @@ if __name__ == "__main__":
 
 	min_scaling_freq = args.min_scaling_freq
 	max_scaling_freq = args.max_scaling_freq
-	setScalingFreq(min_scaling_freq, max_scaling_freq, NUMBER_OF_CORES)
-
 	cpu_freq_governor = args.cpu_freq_governor
+	io_scheduler_algo = args.io_scheduler_algo
+	
 
+	setScalingFreq(min_scaling_freq, max_scaling_freq, NUMBER_OF_CORES)
 	setGovernor(cpu_freq_governor, NUMBER_OF_CORES)
+	setIOScheduler(io_scheduler_algo)
 
 	#cmd = "sudo -s"
 	#subprocess.call(cmd,shell=True)
