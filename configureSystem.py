@@ -195,12 +195,16 @@ if __name__ == "__main__":
 	io_scheduler_algo = args.io_scheduler_algo
 	dirty_ratio = args.dirty_ratio
 	number_of_cores=int(args.number_of_cores)
+
+	logging.basicConfig(filename='debug.log',level=logging.DEBUG, format='%(asctime)s %(message)s')
 	
+	logging.info("New system configuration start")
 	setNumberOfCores(number_of_cores, 3) #Should be done first otherwise the rest might fail
 	setScalingFreq(min_scaling_freq, max_scaling_freq, number_of_cores)
 	setGovernor(cpu_freq_governor, number_of_cores)
 	setIOScheduler(io_scheduler_algo)
 	setDirtyRatio(dirty_ratio)
+	logging.info("New system configuration end")
 	
 
 	
