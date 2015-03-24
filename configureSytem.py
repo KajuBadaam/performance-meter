@@ -99,6 +99,45 @@ def setIOScheduler(algo):
 		# we failed all the attempts - deal with the consequences.
 
 		
+def setDirtyRatio(dr_value):
+
+	
+	for attempt in range(5):
+		try:
+			f1=open("/etc/sysctl.conf", "r")
+			lineno=0
+			flag=False
+			data=f1.readlines()
+			f1.close()
+			for i in range(0, len(data)):
+				
+				if "dirty_ratio" in data[i]:
+					data[i]="vm.dirty_ratio = " + dr_value
+					break
+			else:
+				data.append("vm.dirty_ratio = " + dr_value)
+			with open('/etc/sysctl.conf', 'w') as f1:
+    				f1.writelines(data)
+			
+			subprocess.call("sysctl -p", shell=True)
+	
+
+			
+			out1 = (subprocess.check_output("sysctl -a | grep \"vm.dirty_ratio\"", shell=True)).rstrip('\n')
+			logging.info(out1)
+			print out1
+			if (filter(str.isdigit, out1)) != dr_value:
+				continue
+			
+		except Exception as e:
+			logging.warning(e)
+		  	continue
+		else:
+			print ("Dirty Ratio set to " + dr_value)
+		  	break
+	else:
+		logging.warning("Dirty Ratio change failed.")
+		# we failed all the attempts - deal with the consequences.
 
 
 
@@ -124,6 +163,9 @@ if __name__ == "__main__":
 
 	parser.add_argument('io_scheduler_algo', action='store', 
 	                                 help=('IO Scheduler Algorithm'))
+
+	parser.add_argument('dirty_ratio', action='store', 
+	                                 help=('Dirty Ratio'))
 	#parser.add_argument('', action='store', 
 	#                                help=(''))
 
@@ -133,11 +175,13 @@ if __name__ == "__main__":
 	max_scaling_freq = args.max_scaling_freq
 	cpu_freq_governor = args.cpu_freq_governor
 	io_scheduler_algo = args.io_scheduler_algo
+	dirty_ratio = args.dirty_ratio
 	
 
 	setScalingFreq(min_scaling_freq, max_scaling_freq, NUMBER_OF_CORES)
 	setGovernor(cpu_freq_governor, NUMBER_OF_CORES)
 	setIOScheduler(io_scheduler_algo)
+	setDirtyRatio(dirty_ratio)
 
 	#cmd = "sudo -s"
 	#subprocess.call(cmd,shell=True)
