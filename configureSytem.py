@@ -180,12 +180,13 @@ if __name__ == "__main__":
 
 	
 	parser = argparse.ArgumentParser(description=__doc__, epilog=epi)
+	parser.add_argument('number_of_cores', action='store', help=('Dirty Ratio'))
 	parser.add_argument('min_scaling_freq', action='store', help=('Mininum scaling frequency'))
 	parser.add_argument('max_scaling_freq', action='store', help=(''))
 	parser.add_argument('cpu_freq_governor', action='store', help=(''))
 	parser.add_argument('io_scheduler_algo', action='store', help=('IO Scheduler Algorithm'))
 	parser.add_argument('dirty_ratio', action='store', help=('Dirty Ratio'))
-	parser.add_argument('number_of_cores', action='store', help=('Dirty Ratio'))
+	
 	args = parser.parse_args()
 
 	min_scaling_freq = args.min_scaling_freq
