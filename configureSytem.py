@@ -4,7 +4,7 @@ import subprocess, argparse
 import logging
 
 #Usage: python configureSystem.py number_of_cores (1/3) cpu_min_freq cpu_max_freq governor io_scheduler_algo dirty_ratio
-#Code will throw an exception if a particular setting change fails.
+#Code will throw an exception if a particular setting change fails. It will exit with code 4 if that happens.
 
 def setScalingFreq(min_scaling_freq, max_scaling_freq, no_of_cores):
 
@@ -32,6 +32,7 @@ def setScalingFreq(min_scaling_freq, max_scaling_freq, no_of_cores):
 			  	break
 		else:
 			logging.warning("CPU " + str(i)+ " Frequency change failed")
+			exit(4)
 			# we failed all the attempts - deal with the consequences.
 		
 		
@@ -58,7 +59,7 @@ def setGovernor(governor, no_of_cores):
 			  	break
 		else:
 			logging.warning("CPU " + str(i)+ " Governor change failed")
-			
+			exit(4)
 		
 
 def setIOScheduler(algo):
@@ -97,7 +98,7 @@ def setIOScheduler(algo):
 		  	break
 	else:
 		logging.warning("IO Scheduler Algo change failed")
-		
+		exit(4)
 
 		
 def setDirtyRatio(dr_value):
@@ -136,7 +137,7 @@ def setDirtyRatio(dr_value):
 		  	break
 	else:
 		logging.warning("Dirty Ratio change failed.")
-		
+		exit(4)
 
 def setNumberOfCores(no_of_cores, total_no_of_cores):
 
@@ -165,7 +166,7 @@ def setNumberOfCores(no_of_cores, total_no_of_cores):
 		  	break
 	else:
 		logging.warning("Number of cores change failed")
-			
+		exit(4)	
 		
 
 
@@ -179,12 +180,13 @@ if __name__ == "__main__":
 
 	
 	parser = argparse.ArgumentParser(description=__doc__, epilog=epi)
+	parser.add_argument('number_of_cores', action='store', help=('Dirty Ratio'))
 	parser.add_argument('min_scaling_freq', action='store', help=('Mininum scaling frequency'))
 	parser.add_argument('max_scaling_freq', action='store', help=(''))
 	parser.add_argument('cpu_freq_governor', action='store', help=(''))
 	parser.add_argument('io_scheduler_algo', action='store', help=('IO Scheduler Algorithm'))
 	parser.add_argument('dirty_ratio', action='store', help=('Dirty Ratio'))
-	parser.add_argument('number_of_cores', action='store', help=('Dirty Ratio'))
+	
 	args = parser.parse_args()
 
 	min_scaling_freq = args.min_scaling_freq
