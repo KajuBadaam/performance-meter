@@ -7,7 +7,7 @@ import logging, sys
 
 def writeToFile(user, i, time_now, f1,f2,f3,f4,f5,f6,r1,f_output):
 		f_output.write(user +',' + i +',' +time_now+',' + f1 + ',' + f2 + ',' + f3+ ',' + f4+ ',' + f5+ ',' + r1 + '\n')
-
+		f_output.flush()
 
 if __name__ == "__main__":
 
@@ -33,8 +33,8 @@ if __name__ == "__main__":
 	f_output= open(args.resultFileWithPath,'w')
 	f_configListFile = open(args.allConfigurationsFile,'r')
 
-	for i in range(int(args.begin_configuration_index)-1,5):
-		for line in f_configListFile:
+	for i,line in enumerate(f_configListFile):
+		if i >= int(args.begin_configuration_index)-1 :
 			line = line.rstrip('\n')
 			factor_values = line.split(":")[0:5]
 			line =  next(f_configListFile)
@@ -48,7 +48,7 @@ if __name__ == "__main__":
 			cmd_user = "echo $USERNAME"
 			user = subprocess.check_output(cmd_user,shell=True).rstrip('\n')
 			
-			for i in range(1, int(args.iterations)):
+			for i in range(1, int(args.iterations)+1):
 				#Run benchmark script
 				cmd_benchmark = "python sysbench_benchmark.py"
 				result= subprocess.check_output(cmd_benchmark,shell=True).rstrip('\n')
@@ -57,3 +57,5 @@ if __name__ == "__main__":
 				time_now = subprocess.check_output(cmd_date,shell=True).rstrip('\n')
 				writeToFile(user, str(i), time_now, str(args.ram_level_value),factor_levels[0],factor_levels[1],factor_levels[2],factor_levels[3],factor_levels[4],str(result),f_output)
 
+	f_output.close()
+	f_configListFile.close()			
