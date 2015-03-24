@@ -54,6 +54,6 @@ if __name__ == "__main__":
 				result= subprocess.check_output(cmd_benchmark,shell=True).rstrip('\n')
 
 				cmd_date = "date"
-				time_now = subprocess.call(cmd_date,shell=True).rstrip('\n')
+				time_now = subprocess.check_output(cmd_date,shell=True).rstrip('\n')
 				writeToFile(user, str(i), time_now, str(args.ram_level_value),factor_levels[0],factor_levels[1],factor_levels[2],factor_levels[3],factor_levels[4],str(result),f_output)
 
