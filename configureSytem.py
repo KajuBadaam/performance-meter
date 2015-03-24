@@ -56,7 +56,7 @@ def setGovernor(governor, no_of_cores):
 			  	break
 		else:
 			logging.warning("CPU " + str(i)+ " Governor change failed")
-			# we failed all the attempts - deal with the consequences.
+			
 		
 
 def setIOScheduler(algo):
@@ -82,8 +82,7 @@ def setIOScheduler(algo):
 				if c=="[":
 					flag = True
 
-
-					
+				
 			logging.info(current_algo)
 			if current_algo!=algo:
 				continue
@@ -96,7 +95,7 @@ def setIOScheduler(algo):
 		  	break
 	else:
 		logging.warning("IO Scheduler Algo change failed")
-		# we failed all the attempts - deal with the consequences.
+		
 
 		
 def setDirtyRatio(dr_value):
@@ -137,7 +136,7 @@ def setDirtyRatio(dr_value):
 		  	break
 	else:
 		logging.warning("Dirty Ratio change failed.")
-		# we failed all the attempts - deal with the consequences.
+		
 
 
 
@@ -149,26 +148,14 @@ if __name__ == "__main__":
 	epi = ""
 
 	NUMBER_OF_CORES=3
+	
 	parser = argparse.ArgumentParser(description=__doc__, epilog=epi)
-
-	parser.add_argument('min_scaling_freq', action='store', 
-									help=('Mininum scaling frequency'))
-
-
-	parser.add_argument('max_scaling_freq', action='store', 
-									help=(''))
-
-	parser.add_argument('cpu_freq_governor', action='store', 
-	                                 help=(''))
-
-	parser.add_argument('io_scheduler_algo', action='store', 
-	                                 help=('IO Scheduler Algorithm'))
-
-	parser.add_argument('dirty_ratio', action='store', 
-	                                 help=('Dirty Ratio'))
-	#parser.add_argument('', action='store', 
-	#                                help=(''))
-
+	parser.add_argument('min_scaling_freq', action='store', help=('Mininum scaling frequency'))
+	parser.add_argument('max_scaling_freq', action='store', help=(''))
+	parser.add_argument('cpu_freq_governor', action='store', help=(''))
+	parser.add_argument('io_scheduler_algo', action='store', help=('IO Scheduler Algorithm'))
+	parser.add_argument('dirty_ratio', action='store', help=('Dirty Ratio'))
+	
 	args = parser.parse_args()
 
 	min_scaling_freq = args.min_scaling_freq
@@ -183,29 +170,4 @@ if __name__ == "__main__":
 	setIOScheduler(io_scheduler_algo)
 	setDirtyRatio(dirty_ratio)
 
-	#cmd = "sudo -s"
-	#subprocess.call(cmd,shell=True)
-
-	#min_scaling_freq_cmd = "echo "+ min_scaling_freq +" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq "
-	#max_scaling_freq_cmd = "echo "+ max_scaling_freq + " > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq"
-
-	#TODO :  do for all CPU's
-
-	#governor_cmd = "echo " + cpu_freq_governor + "> /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor"
-
-
-	#print min_scaling_freq_cmd
-	#print max_scaling_freq_cmd
-
-	#subprocess.call("ls", shell=True) 
-
-	#subprocess.call(governor_cmd,shell=True)
-
-	'''
-	p = subprocess.Popen(cmd,stdout= subprocess.PIPE,shell=True)
-	(output,err) = p.communicate()
-	p_status = p.wait()
-
-	print "Command Output : " , output
-	print "Command return status : " , p_status
-	'''
+	
