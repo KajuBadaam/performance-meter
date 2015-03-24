@@ -1,0 +1,5 @@
+scaling_max_freq:2600000:1900000
+cpu_freq_governor:performance:ondemand
+num_cores:3:1
+disc_io:cfq:deadline
+dirty_ratio:80:20
