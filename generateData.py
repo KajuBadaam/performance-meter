@@ -59,7 +59,7 @@ if __name__ == "__main__":
 			for j in range(1, int(args.iterations)+1):
 
 				
-				logging.info('Calling benchmark')
+				logging.info('Calling benchmark :' + int(j))
 				
 				#Run benchmark script
 				cmd_benchmark = "python sysbench_benchmark.py"
